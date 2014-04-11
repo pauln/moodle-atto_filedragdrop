@@ -1,5 +1,5 @@
 {
-  "name": "moodle-atto_iamgedragdrop-button",
+  "name": "moodle-atto_imagedragdrop-button",
   "builds": {
     "moodle-atto_imagedragdrop-button": {
       "jsfiles": [

@@ -15,35 +15,60 @@ YUI.add('moodle-atto_imagedragdrop-button', function (Y, NAME) {
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Atto text editor imagedragdrop plugin.
- *
- * This plugin adds the ability to drop an image in and have it auto-upload
- * into the Moodle draft file area.
- *
+/*
  * @package    editor-atto
  * @copyright  2014 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-M.atto_imagedragdrop = M.atto_imagedragdrop || {
+
+/**
+ * @module moodle-atto_imagedragdrop
+ */
+
+/**
+ * Atto text editor imagedragdrop plugin.
+ *
+ * This plugin adds the ability to drop an image in and have it auto-upload
+ * into the relevant Moodle draft file area.
+ *
+ * @namespace M.atto_imagedragdrop
+ * @class Button
+ * @extends M.editor_atto.EditorPlugin
+ */
+var COMPONENTNAME = 'atto_imagedragdrop',
+    IMAGETEMPLATE = '' +
+            '<img src="{{url}}" alt="{{alt}}" ' +
+                '{{#if id}}id="{{id}}" {{/if}}' +
+                '/>';
+
+Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
+    /**
+     * A reference to the current selection at the time that the dialogue
+     * was opened.
+     *
+     * @property _currentSelection
+     * @type Range
+     * @private
+     */
+    _currentSelection: null,
 
     /**
      * Add event listeners.
      *
-     * @method init
-     * @param {Object} params
+     * @method initializer
      */
-    init : function(params) {
+    initializer : function() {
         var self = this;
-        var editable = M.editor_atto.get_editable_node(params.elementid);
-        editable.on('drop', function(e) {
-            M.editor_atto.save_selection(params);
+        var host = this.get('host');
+        var template = Y.Handlebars.compile(IMAGETEMPLATE);
+        this.editor.on('drop', function(e) {
+            host.saveSelection();
             e = e._event;
             // Only handle the event if an image file was dropped in.
             if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length && /^image\//.test(e.dataTransfer.files[0].type)) {
                 e.preventDefault();
                 e.stopPropagation();
-                var options = M.editor_atto.filepickeroptions[params.elementid]['image'];
+                var options = host.get('filepickeroptions').image;
                 var formData = new FormData();
 
                 formData.append('repo_upload_file', e.dataTransfer.files[0]);
@@ -69,23 +94,22 @@ M.atto_imagedragdrop = M.atto_imagedragdrop || {
                 // Insert spinner as a placeholder.
                 var timestamp = new Date().getTime();
                 var uploadid = 'moodleimage_' + Math.round(Math.random()*100000)+'-'+timestamp;
-                var args = {
-                    src: M.util.image_url("i/loading_small", 'moodle'),
-                    id: uploadid, 'class': 'mceNonEditable'
-                };
 
-                M.editor_atto.focus(params.elementid);
-                M.editor_atto.restore_selection(e, params.elementid);
-                imagehtml = '<img id="' + uploadid + '" src="' + Y.Escape.html(args.src) + '" alt="' + Y.Escape.html('loading...') + '"/>';
-                M.editor_atto.insert_html_at_focus_point(imagehtml);
-                M.editor_atto.text_updated(params.elementid);
+                host.focus();
+                host.restoreSelection();
+                var imagehtml = template({
+                    url: M.util.image_url("i/loading_small", 'moodle'),
+                    alt: M.util.get_string('uploading', COMPONENTNAME),
+                    id: uploadid
+                });
+                host.insertContentAtFocusPoint(imagehtml);
+                self.markUpdated();
 
                 var xhr = new XMLHttpRequest();
 
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
-                        var editable = M.editor_atto.get_editable_node(params.elementid);
-                        var placeholder = editable.one('#' + uploadid);
+                        var placeholder = self.editor.one('#' + uploadid);
                         if (xhr.status === 200) {
                             var result = JSON.parse(xhr.responseText);
                             if (result) {
@@ -106,14 +130,17 @@ M.atto_imagedragdrop = M.atto_imagedragdrop || {
 
                                 // Replace placeholder with actual image.
                                 var filename = file.filename || file.file;
-                                var newhtml = '<img src="' + Y.Escape.html(file.url) + '" alt="' + Y.Escape.html(filename) + '"/>';
+                                var newhtml = template({
+                                    url: file.url,
+                                    alt: filename
+                                });
                                 var newimage = Y.Node.create(newhtml);
                                 if (placeholder) {
                                     placeholder.replace(newimage);
                                 } else {
-                                    editable.appendChild(newimage);
+                                    self.editor.appendChild(newimage);
                                 }
-                                M.editor_atto.text_updated(params.elementid);
+                                self.markUpdated();
                             }
                         } else {
                             alert(M.util.get_string('servererror', 'moodle'));
@@ -132,7 +159,7 @@ M.atto_imagedragdrop = M.atto_imagedragdrop || {
         }, this);
     }
 
-};
+});
 
 
-}, '@VERSION@', {"requires": ["node", "escape"]});
+}, '@VERSION@', {"requires": ["moodle-editor_atto-plugin", "node", "escape"]});

@@ -23,3 +23,4 @@
  */
 
 $string['pluginname'] = 'Image drag &amp; drop';
+$string['uploading'] = 'Uploading, please wait...';

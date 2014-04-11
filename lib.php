@@ -29,4 +29,11 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $elementid
  */
 function atto_imagedragdrop_strings_for_js() {
+    global $PAGE;
+
+    $strings = array(
+        'uploading',
+    );
+
+    $PAGE->requires->strings_for_js($strings, 'atto_imagedragdrop');
 }
