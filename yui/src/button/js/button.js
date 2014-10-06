@@ -67,6 +67,7 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                 e.preventDefault();
                 e.stopPropagation();
                 var options = host.get('filepickeroptions').image;
+                var savepath = (options.savepath === undefined) ? '/' : options.savepath;
                 var formData = new FormData();
 
                 formData.append('repo_upload_file', e.dataTransfer.files[0]);
@@ -86,7 +87,7 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                 formData.append('env', options.env);
                 formData.append('sesskey', M.cfg.sesskey);
                 formData.append('client_id', options.client_id);
-                formData.append('savepath', options.savepath);
+                formData.append('savepath', savepath);
                 formData.append('ctx_id', options.context.id);
 
                 // Insert spinner as a placeholder.
