@@ -36,6 +36,7 @@
 var COMPONENTNAME = 'atto_imagedragdrop',
     IMAGETEMPLATE = '' +
             '<img src="{{url}}" alt="{{alt}}" ' +
+                ' style="vertical-align:text-bottom;margin: 0 .5em;" class="img-responsive" ' +
                 '{{#if id}}id="{{id}}" {{/if}}' +
                 '/>';
 
