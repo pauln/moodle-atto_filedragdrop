@@ -74,14 +74,10 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                 formData.append('repo_upload_file', e.dataTransfer.files[0]);
                 formData.append('itemid', options.itemid);
                 // List of repositories is an object rather than an array.  This makes iteration more awkward.
-                var i=0;
-                while (true) {
-                    if (options.repositories[++i] === undefined) {
-                        // No more repos in list.  This is a problem, but we'll get an error back anyway so we'll handle it later.
-                        break;
-                    }
-                    if (options.repositories[i].type === 'upload') {
-                        formData.append('repo_id', options.repositories[i].id);
+                var keys = Object.keys(options.repositories);
+                for (var i=0; i<keys.length; i++) {
+                    if (options.repositories[keys[i]].type === 'upload') {
+                        formData.append('repo_id', options.repositories[keys[i]].id);
                         break;
                     }
                 }
