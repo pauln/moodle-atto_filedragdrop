@@ -35,8 +35,10 @@
  */
 var COMPONENTNAME = 'atto_imagedragdrop',
     IMAGETEMPLATE = '' +
-            '<img src="{{url}}" alt="{{alt}}" ' +
+            '<img src="{{url}}" ' +
+                '{{#if alt}}alt="{{alt}}" {{/if}}' +
                 ' style="vertical-align:text-bottom;margin: 0 .5em;" class="img-responsive" ' +
+                '{{#if presentation}}role="presentation" {{/if}}' +
                 '{{#if id}}id="{{id}}" {{/if}}' +
                 '/>';
 
@@ -125,10 +127,9 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                                 }
 
                                 // Replace placeholder with actual image.
-                                var filename = file.filename || file.file;
                                 var newhtml = template({
                                     url: file.url,
-                                    alt: filename
+                                    presentation: true
                                 });
                                 var newimage = Y.Node.create(newhtml);
                                 if (placeholder) {
