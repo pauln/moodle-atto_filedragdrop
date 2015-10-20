@@ -78,7 +78,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                 console.log('Not an image.');
                 e.preventDefault();
                 e.stopPropagation();
-                var options = host.get('filepickeroptions').image;
+                var options = host.get('filepickeroptions').link;
                 var savepath = (options.savepath === undefined) ? '/' : options.savepath;
                 var formData = new FormData();
 
