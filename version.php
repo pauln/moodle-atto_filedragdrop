@@ -17,8 +17,8 @@
 /**
  * Atto text editor integration version file.
  *
- * @package    atto_imagedragdrop
- * @copyright  2014 Paul Nicholls
+ * @package    atto_filedragdrop
+ * @copyright  2015 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,5 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2014031802;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2014041100;        // Requires this Moodle version.
-$plugin->release   = '1.0.2';
-$plugin->component = 'atto_imagedragdrop';  // Full name of the plugin (used for diagnostics).
+$plugin->release   = '0.1';
+$plugin->maturity  = MATURITY_BETA;
+$plugin->component = 'atto_filedragdrop';  // Full name of the plugin (used for diagnostics).

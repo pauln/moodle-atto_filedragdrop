@@ -1,4 +1,4 @@
-YUI.add('moodle-atto_imagedragdrop-button', function (Y, NAME) {
+YUI.add('moodle-atto_filedragdrop-button', function (Y, NAME) {
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -17,25 +17,29 @@ YUI.add('moodle-atto_imagedragdrop-button', function (Y, NAME) {
 
 /*
  * @package    editor-atto
- * @copyright  2014 Paul Nicholls
+ * @copyright  2015 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * @module moodle-atto_imagedragdrop
+ * @module moodle-atto_filedragdrop
  */
 
 /**
- * Atto text editor imagedragdrop plugin.
+ * Atto text editor filedragdrop plugin.
  *
- * This plugin adds the ability to drop an image in and have it auto-upload
+ * This plugin adds the ability to drop a file in and have it auto-upload
  * into the relevant Moodle draft file area.
  *
- * @namespace M.atto_imagedragdrop
+ * @namespace M.atto_filedragdrop
  * @class Button
  * @extends M.editor_atto.EditorPlugin
  */
-var COMPONENTNAME = 'atto_imagedragdrop',
+var COMPONENTNAME = 'atto_filedragdrop',
+    LINKTEMPLATE = '' +
+            '<a href="{{url}}" ' +
+                '{{#if id}}id="{{id}}" {{/if}}' +
+                '>{{text}}',
     IMAGETEMPLATE = '' +
             '<img src="{{url}}" ' +
                 '{{#if alt}}alt="{{alt}}" {{/if}}' +
@@ -44,7 +48,7 @@ var COMPONENTNAME = 'atto_imagedragdrop',
                 '{{#if id}}id="{{id}}" {{/if}}' +
                 '/>';
 
-Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
+Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     /**
      * A reference to the current selection at the time that the dialogue
      * was opened.
@@ -63,12 +67,17 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
     initializer : function() {
         var self = this;
         var host = this.get('host');
-        var template = Y.Handlebars.compile(IMAGETEMPLATE);
+        var template = Y.Handlebars.compile(LINKTEMPLATE);
+        var imgtemplate = Y.Handlebars.compile(IMAGETEMPLATE);
         this.editor.on('drop', function(e) {
+            console.log('File dragdrop handler running...');
             host.saveSelection();
             e = e._event;
             // Only handle the event if an image file was dropped in.
-            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length && /^image\//.test(e.dataTransfer.files[0].type)) {
+            var handlesDataTransfer = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length);
+            console.log('Handles data transfer: '+(handlesDataTransfer?'Yes':'No'));
+            if (handlesDataTransfer && !/^image\//.test(e.dataTransfer.files[0].type)) {
+                console.log('Not an image.');
                 e.preventDefault();
                 e.stopPropagation();
                 var options = host.get('filepickeroptions').image;
@@ -93,11 +102,11 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
 
                 // Insert spinner as a placeholder.
                 var timestamp = new Date().getTime();
-                var uploadid = 'moodleimage_' + Math.round(Math.random()*100000)+'-'+timestamp;
+                var uploadid = 'moodlefile_' + Math.round(Math.random()*100000)+'-'+timestamp;
 
                 host.focus();
                 host.restoreSelection();
-                var imagehtml = template({
+                var imagehtml = imgtemplate({
                     url: M.util.image_url("i/loading_small", 'moodle'),
                     alt: M.util.get_string('uploading', COMPONENTNAME),
                     id: uploadid
@@ -123,21 +132,21 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                                 var file = result;
                                 if (result.event && result.event === 'fileexists') {
                                     // A file with this name is already in use here - rename to avoid conflict.
-                                    // Chances are, it's a different image (stored in a different folder on the user's computer).
-                                    // If the user wants to reuse an existing image, they can copy/paste it within the editor.
+                                    // Chances are, it's a different file (stored in a different folder on the user's computer).
+                                    // If the user wants to reuse an existing file, they can copy/paste the link within the editor.
                                     file = result.newfile;
                                 }
 
-                                // Replace placeholder with actual image.
+                                // Replace placeholder with actual link.
                                 var newhtml = template({
                                     url: file.url,
-                                    presentation: true
+                                    text: file.file
                                 });
-                                var newimage = Y.Node.create(newhtml);
+                                var newtag = Y.Node.create(newhtml);
                                 if (placeholder) {
-                                    placeholder.replace(newimage);
+                                    placeholder.replace(newtag);
                                 } else {
-                                    self.editor.appendChild(newimage);
+                                    self.editor.appendChild(newtag);
                                 }
                                 self.markUpdated();
                             }
@@ -156,6 +165,7 @@ Y.namespace('M.atto_imagedragdrop').Button = Y.Base.create('button', Y.M.editor_
                 return false;
             }
         }, this);
+        console.log('File dragdrop initialised.');
     }
 
 });

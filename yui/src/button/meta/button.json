@@ -1,5 +1,5 @@
 {
-    "moodle-atto_imagedragdrop-button": {
+    "moodle-atto_filedragdrop-button": {
         "requires": [
             "moodle-editor_atto-plugin"
         ]

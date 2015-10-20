@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'atto_imagedragdrop', language 'en'.
+ * Strings for component 'atto_filedragdrop', language 'en'.
  *
- * @package    atto_imagedragdrop
- * @copyright  2014 Paul Nicholls
+ * @package    atto_filedragdrop
+ * @copyright  2015 Paul Nicholls
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Image drag &amp; drop';
+$string['pluginname'] = 'File drag &amp; drop';
 $string['uploading'] = 'Uploading, please wait...';
