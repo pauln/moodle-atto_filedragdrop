@@ -68,14 +68,11 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
         var template = Y.Handlebars.compile(LINKTEMPLATE);
         var imgtemplate = Y.Handlebars.compile(IMAGETEMPLATE);
         this.editor.on('drop', function(e) {
-            console.log('File dragdrop handler running...');
             host.saveSelection();
             e = e._event;
             // Only handle the event if an image file was dropped in.
             var handlesDataTransfer = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length);
-            console.log('Handles data transfer: '+(handlesDataTransfer?'Yes':'No'));
             if (handlesDataTransfer && !/^image\//.test(e.dataTransfer.files[0].type)) {
-                console.log('Not an image.');
                 e.preventDefault();
                 e.stopPropagation();
                 var options = host.get('filepickeroptions').link;
@@ -163,7 +160,6 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                 return false;
             }
         }, this);
-        console.log('File dragdrop initialised.');
     }
 
 });
