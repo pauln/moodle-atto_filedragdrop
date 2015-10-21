@@ -135,7 +135,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                                 // Replace placeholder with actual link.
                                 var newhtml = template({
                                     url: file.url,
-                                    text: file.file
+                                    text: file.file || file.filename
                                 });
                                 var newtag = Y.Node.create(newhtml);
                                 if (placeholder) {
