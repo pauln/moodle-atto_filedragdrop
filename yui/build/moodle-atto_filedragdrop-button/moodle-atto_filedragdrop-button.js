@@ -148,7 +148,9 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                                 self.markUpdated();
                             }
                         } else {
-                            alert(M.util.get_string('servererror', 'moodle'));
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({message: M.util.get_string('servererror', 'moodle')});
+                            });
                             if (placeholder) {
                                 placeholder.remove(true);
                             }
