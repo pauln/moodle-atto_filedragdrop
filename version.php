@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2014031802;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2014031803;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2014041100;        // Requires this Moodle version.
-$plugin->release   = '0.1';
+$plugin->release   = '0.1.1';
 $plugin->maturity  = MATURITY_BETA;
 $plugin->component = 'atto_filedragdrop';  // Full name of the plugin (used for diagnostics).
