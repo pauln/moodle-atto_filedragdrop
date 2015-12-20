@@ -36,6 +36,7 @@ YUI.add('moodle-atto_filedragdrop-button', function (Y, NAME) {
  * @extends M.editor_atto.EditorPlugin
  */
 var COMPONENTNAME = 'atto_filedragdrop',
+    // @codingStandardsIgnoreStart
     LINKTEMPLATE = '' +
             '<a href="{{url}}" ' +
                 '{{#if id}}id="{{id}}" {{/if}}' +
@@ -47,6 +48,7 @@ var COMPONENTNAME = 'atto_filedragdrop',
                 '{{#if presentation}}role="presentation" {{/if}}' +
                 '{{#if id}}id="{{id}}" {{/if}}' +
                 '/>';
+    // @codingStandardsIgnoreEnd
 
 Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     /**
@@ -77,6 +79,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
         e = e._event;
         // Only handle the event if an image file was dropped in.
         var handlesDataTransfer = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length);
+        // @codingStandardsIgnoreLine
         if (handlesDataTransfer && !/^image\//.test(e.dataTransfer.files[0].type)) {
             var options = host.get('filepickeroptions').link,
                 savepath = (options.savepath === undefined) ? '/' : options.savepath,
@@ -92,7 +95,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
             formData.append('repo_upload_file', e.dataTransfer.files[0]);
             formData.append('itemid', options.itemid);
 
-            for (var i=0; i<keys.length; i++) {
+            for (var i = 0; i < keys.length; i++) {
                 if (options.repositories[keys[i]].type === 'upload') {
                     formData.append('repo_id', options.repositories[keys[i]].id);
                     break;
@@ -106,7 +109,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
 
             // Insert spinner as a placeholder.
             timestamp = new Date().getTime();
-            uploadid = 'moodlefile_' + Math.round(Math.random()*100000)+'-'+timestamp;
+            uploadid = 'moodlefile_' + Math.round(Math.random() * 100000) + '-' + timestamp;
             host.focus();
             host.restoreSelection();
             imagehtml = imgtemplate({
