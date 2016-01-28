@@ -13,6 +13,8 @@ This plugin for Moodle's Atto WYSIWYG editor lets you drag any file into Atto - 
 
 If you are using Moodle's media filters, any supported multimedia files will display inline via the filter once published.
 
+#### NOTE:
+This plugin *does not add a toolbar button* or any other visible UI to Atto - it simply detects files dragged and dropped into Atto, automatically uploading them to Moodle.  It does still need to be in your Atto toolbar configuration in order to work, though in most cases this should happen automatically as part of the installation process.
 
 Installation
 ============
