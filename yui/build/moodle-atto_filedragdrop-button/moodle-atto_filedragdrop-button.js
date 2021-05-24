@@ -81,6 +81,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
         var handlesDataTransfer = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length);
         // @codingStandardsIgnoreLine
         if (handlesDataTransfer && !/^image\//.test(e.dataTransfer.files[0].type)) {
+            self.notifyUploadStarted();
             var options = host.get('filepickeroptions').link,
                 savepath = (options.savepath === undefined) ? '/' : options.savepath,
                 formData = new FormData(),
@@ -135,6 +136,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                                 if (placeholder) {
                                     placeholder.remove(true);
                                 }
+                                self.notifyUploadCompleted();
                                 return new M.core.ajaxException(result);
                             }
 
@@ -160,6 +162,7 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                             self.markUpdated();
                         }
                     } else {
+                        self.notifyUploadCompleted();
                         Y.use('moodle-core-notification-alert', function() {
                             new M.core.alert({message: M.util.get_string('servererror', 'moodle')});
                         });
@@ -167,11 +170,40 @@ Y.namespace('M.atto_filedragdrop').Button = Y.Base.create('button', Y.M.editor_a
                             placeholder.remove(true);
                         }
                     }
+                    self.notifyUploadCompleted();
                 }
             };
             xhr.open("POST", M.cfg.wwwroot + '/repository/repository_ajax.php?action=upload', true);
             xhr.send(formData);
             return false;
+        }
+    },
+
+    /**
+     * Trigger form upload complete events.
+     */
+     notifyUploadCompleted: function() {
+        var self = this;
+        if (require.specified('core_form/events')) {
+            require(['core_form/events'], function(FormEvent) {
+                if (typeof(FormEvent.triggerUploadCompleted) !== "undefined") {
+                    FormEvent.triggerUploadCompleted(self.editor.get('id'));
+                }
+            });
+        }
+    },
+
+    /**
+     * Trigger form upload start events.
+     */
+     notifyUploadStarted: function() {
+        var self = this;
+        if (require.specified('core_form/events')) {
+            require(['core_form/events'], function(FormEvent) {
+                if (typeof(FormEvent.triggerUploadStarted) !== "undefined") {
+                    FormEvent.triggerUploadStarted(self.editor.get('id'));
+                }
+            });
         }
     }
 
